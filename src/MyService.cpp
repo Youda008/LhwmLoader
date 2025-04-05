@@ -62,35 +62,24 @@ static const TCHAR * const SeverityStrings [] =
 };
 static void log( Severity severity, const TCHAR * format, ... )
 {
+#ifdef DEBUGGING_PROCESS
 	va_list args;
 	va_start( args, format );
 
-	#ifdef DEBUGGING_PROCESS
-	{
-		TCHAR timeStr [20];
-		time_t now = time(nullptr);
-		_tcsftime( timeStr, 20, _T("%Y-%m-%d %H:%M:%S"), localtime(&now) );
+	TCHAR timeStr [20];
+	time_t now = time(nullptr);
+	_tcsftime( timeStr, 20, _T("%Y-%m-%d %H:%M:%S"), localtime(&now) );
 
-		TCHAR finalFormat [128];
-		_sntprintf( finalFormat, 127, _T("%s [%-8s] %s\n"), timeStr, SeverityStrings[ size_t(severity) ], format );
-		finalFormat[126] = _T('\n');
-		finalFormat[127] = _T('\0');
+	TCHAR finalFormat [128];
+	_sntprintf( finalFormat, 127, _T("%s [%-8s] %s\n"), timeStr, SeverityStrings[ size_t(severity) ], format );
+	finalFormat[126] = _T('\n');
+	finalFormat[127] = _T('\0');
 
-		_vtprintf( finalFormat, args );
-		fflush( stdout );
-	}
-	#endif
+	_vtprintf( finalFormat, args );
+	fflush( stdout );
 
 	va_end( args );
-}
-
-template< typename ... Args >
-void reportEventAndLog( DWORD eventID, Severity severity, const TCHAR * format, Args ... args )
-{
-	ReportSvcEvent( eventID, format, args ... );
-	#ifndef DEBUGGING_PROCESS
-		log( severity, format, args ... );
-	#endif
+#endif
 }
 
 
@@ -99,13 +88,10 @@ void reportEventAndLog( DWORD eventID, Severity severity, const TCHAR * format, 
 
 bool MyServiceInit()
 {
-	log( Severity::Info, _T("Initializing service") );
-	ReportSvcStatus( SERVICE_START_PENDING, NO_ERROR, 4000 );
-
 	// reading the hardware sensors requires admin privileges
 	if (!IsUserAnAdmin())
 	{
-		reportEventAndLog( SVCEVENT_CUSTOM_ERROR, Severity::Error, _T("User is not admin") );
+		ReportSvcEvent( SVCEVENT_CUSTOM_ERROR, _T("User is not admin, driver cannot be loaded") );
 		//return false;
 	}
 
@@ -113,29 +99,24 @@ bool MyServiceInit()
 	auto sensorInfo = LHWM::GetHardwareSensorMap();
 	if (sensorInfo.empty())
 	{
-		reportEventAndLog( SVCEVENT_CUSTOM_ERROR, Severity::Error, _T("Failed to initalize sensor monitoring") );
+		ReportSvcEvent( SVCEVENT_CUSTOM_ERROR, _T("Failed to initalize sensor monitoring") );
 		return false;
 	}
-
-	ReportSvcStatus( SERVICE_START_PENDING, NO_ERROR, 1000 );
 
 	// Create an event. The control handler function (SvcCtrlHandler)
 	// signals this event when it receives the stop control code.
 	g_svcStopEvent = CreateEvent( NULL, TRUE, FALSE, NULL );
 	if (g_svcStopEvent == NULL)
 	{
-		reportEventAndLog( SVCEVENT_CUSTOM_ERROR, Severity::Error, _T("Failed to create stop event") );
+		ReportSvcEvent( SVCEVENT_CUSTOM_ERROR, _T("Failed to create stop event") );
 		return false;
 	}
 
-	log( Severity::Info, _T("Service has been initialized") );
 	return true;
 }
 
 void MyServiceRun()
 {
-	log( Severity::Info, _T("Service is running") );
-
 	DWORD waitResult = 0;
 	do
 	{
@@ -144,14 +125,10 @@ void MyServiceRun()
 		waitResult = WaitForSingleObject( g_svcStopEvent, 1000 );
 	}
 	while (waitResult == WAIT_TIMEOUT);
-
-	log( Severity::Info, _T("Service has stopped") );
 }
 
 void MyServiceStop()
 {
-	log( Severity::Info, _T("Stopping service") );
-
 	// signal the primary thread
 	SetEvent( g_svcStopEvent );
 }
