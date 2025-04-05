@@ -91,9 +91,11 @@ bool MyServiceInit()
 	// reading the hardware sensors requires admin privileges
 	if (!IsUserAnAdmin())
 	{
-		ReportSvcEvent( SVCEVENT_CUSTOM_ERROR, _T("User is not admin, driver cannot be loaded") );
+		ReportSvcEvent( SVCEVENT_CUSTOM_ERROR, _T("User is not admin, driver probably won't loaded") );
 		//return false;
 	}
+
+	ReportSvcStatus( SERVICE_START_PENDING, NO_ERROR, 8000 );  // estimate of how long the initialization can take
 
 	// This must be what loads the driver, otherwise i don't know what else does.
 	auto sensorInfo = LHWM::GetHardwareSensorMap();
@@ -102,6 +104,14 @@ bool MyServiceInit()
 		ReportSvcEvent( SVCEVENT_CUSTOM_ERROR, _T("Failed to initalize sensor monitoring") );
 		return false;
 	}
+
+#ifdef DEBUGGING_PROCESS
+	_tprintf( _T("Found %zu devices with sensors:\n"), sensorInfo.size() );
+	for (const auto & [key, info] : sensorInfo)
+	{
+		_tprintf( _T("  \"%s\":\n"), key.c_str() );
+	}
+#endif // DEBUGGING_PROCESS
 
 	// Create an event. The control handler function (SvcCtrlHandler)
 	// signals this event when it receives the stop control code.
