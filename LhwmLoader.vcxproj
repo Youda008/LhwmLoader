@@ -27,54 +27,21 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="external\CppUtils-Essential\BinaryStream.cpp" />
-    <ClCompile Include="external\CppUtils-Essential\ContainerUtils.cpp" />
-    <ClCompile Include="external\CppUtils-Essential\CriticalError.cpp" />
-    <ClCompile Include="external\CppUtils-Essential\LangUtils.cpp" />
-    <ClCompile Include="external\CppUtils-Essential\StreamUtils.cpp" />
-    <ClCompile Include="external\CppUtils-Essential\StringUtils.cpp" />
-    <ClCompile Include="external\CppUtils-Network\HostInfo.cpp" />
-    <ClCompile Include="external\CppUtils-Network\NetAddress.cpp" />
-    <ClCompile Include="external\CppUtils-Network\Socket.cpp" />
-    <ClCompile Include="external\CppUtils-Network\SystemErrorInfo.cpp" />
-    <ClCompile Include="src\Config.cpp" />
     <ClCompile Include="src\MyService.cpp" />
     <ClCompile Include="src\SvcCommon.cpp" />
     <ClCompile Include="src\SvcMain.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="external\CppUtils-Essential\Assert.hpp" />
-    <ClInclude Include="external\CppUtils-Essential\BinaryStream.hpp" />
-    <ClInclude Include="external\CppUtils-Essential\ContainerUtils.hpp" />
-    <ClInclude Include="external\CppUtils-Essential\CriticalError.hpp" />
-    <ClInclude Include="external\CppUtils-Essential\Endianity.hpp" />
-    <ClInclude Include="external\CppUtils-Essential\Essential.hpp" />
-    <ClInclude Include="external\CppUtils-Essential\LangUtils.hpp" />
-    <ClInclude Include="external\CppUtils-Essential\MathUtils.hpp" />
-    <ClInclude Include="external\CppUtils-Essential\Safety.hpp" />
-    <ClInclude Include="external\CppUtils-Essential\Span.hpp" />
-    <ClInclude Include="external\CppUtils-Essential\StreamUtils.hpp" />
-    <ClInclude Include="external\CppUtils-Essential\StringUtils.hpp" />
-    <ClInclude Include="external\CppUtils-Essential\TypeTraits.hpp" />
-    <ClInclude Include="external\CppUtils-Network\HostInfo.hpp" />
-    <ClInclude Include="external\CppUtils-Network\NetAddress.hpp" />
-    <ClInclude Include="external\CppUtils-Network\Socket.hpp" />
-    <ClInclude Include="external\CppUtils-Network\SystemErrorInfo.hpp" />
-    <ClInclude Include="src\Config.hpp" />
     <ClInclude Include="src\MyService.hpp" />
-    <ClInclude Include="src\Protocol.hpp" />
     <ClInclude Include="src\SvcCommon.hpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="external\CppUtils-Essential\README.md" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{F4B62263-1237-4EF4-AFEC-20F490EB2FF2}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>HwMonitorService</RootNamespace>
+    <RootNamespace>LhwmLoader</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>HwMonitorService</ProjectName>
+    <ProjectName>LhwmLoader</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -150,7 +117,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <TargetName>HwMonitorProcess</TargetName>
+    <TargetName>LhwmLoaderProcess</TargetName>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);shared\CppUtils-Essential;shared\CppUtils-Network;shared\OpenRGBHardwareSyncPlugin\dependencies\lhwm-cpp-wrapper</IncludePath>
     <OutDir>$(SolutionDir)\build\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)\build\$(Platform)\$(Configuration)\</IntDir>
@@ -173,6 +140,7 @@
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);shared\CppUtils-Essential;shared\CppUtils-Network;shared\OpenRGBHardwareSyncPlugin\dependencies\lhwm-cpp-wrapper</IncludePath>
     <OutDir>$(SolutionDir)\build\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)\build\$(Platform)\$(Configuration)\</IntDir>
+    <TargetName>LhwmLoaderService</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-Process|x64'">
     <LinkIncremental>false</LinkIncremental>
